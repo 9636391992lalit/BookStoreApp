@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body {
+  font-family: "Poppins", sans-serif;
+}
+/* slider.css */
+.slick-dots li button:before {
+  color: rgb(0, 0, 0) !important; /* Change to any bright color */
+  opacity: 0;
+  font-size: 12px;
+}
+
+.slick-dots li.slick-active button:before {
+  color: #000000 !important; /* Yellow-400 or any highlight color */
+}
