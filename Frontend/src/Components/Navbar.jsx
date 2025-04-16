@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import Login from './Login.jsx'
+import { useAuth } from "../context/AuthProvider";
+import Logout from "./Logout.jsx";
 function Navbar() {
+  const [authUser, setAuthUser] = useAuth();
+  console.log(authUser);
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light"
   );
 
@@ -171,7 +175,10 @@ function Navbar() {
                     1,12,15.5Z" />
               </svg>
             </label>
-            <div className="">
+            {authUser ? (
+              <Logout />
+            ) : (
+             <div className="">
                 <a
                   className="bg-black text-white  ml-7 px-3 py-2 rounded-md hover:bg-slate-800 duration-300 cursor-pointer"
                   onClick={() => {
@@ -183,7 +190,7 @@ function Navbar() {
                   Login
                 </a>
                 <Login />
-              </div>
+              </div> )}
           </div>
         </div>
       </div>

@@ -1,0 +1,30 @@
+{
+  "name": "bookstore",
+  "version": "1.0.0",
+  "description": "mern project",
+  "homepage": "https://github.com/9636391992lalit/BookStoreApp#readme",
+  "bugs": {
+    "url": "https://github.com/9636391992lalit/BookStoreApp/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/9636391992lalit/BookStoreApp.git"
+  },
+  "license": "ISC",
+  "author": "Lalit",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mongoose": "^8.13.2",
+    "mongose": "^0.0.2-security",
+    "nodemon": "^3.1.9"
+  }
+}
