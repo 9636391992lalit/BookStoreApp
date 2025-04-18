@@ -1,17 +1,53 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,useRef} from "react";
 import { useLocation, Link } from "react-router-dom";
 import Login from './Login.jsx'
 import { useAuth } from "../context/AuthProvider";
 import Logout from "./Logout.jsx";
+import axios from 'axios';
+
 function Navbar() {
   const [authUser, setAuthUser] = useAuth();
   console.log(authUser);
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light"
   );
-
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredBooks, setFilteredBooks] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
   const element = document.documentElement;
-  const location = useLocation();
 
+  const location = useLocation();
+  
+  useEffect(() => {
+    const fetchBooks = async () => {
+      if (searchTerm.trim() === '') {
+        setFilteredBooks([]);
+        setShowDropdown(false);
+        return;
+      }
+      try {
+        const res = await axios.get(`http://localhost:4001/book/search?name=${searchTerm}`);
+        setFilteredBooks(res.data);
+        setShowDropdown(true);
+      } catch (error) {
+        console.error("Search failed:", error);
+      }
+    };
+
+    const delayDebounce = setTimeout(fetchBooks, 300); // debounce
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
   useEffect(() => {
     if (theme === "dark") {
       element.classList.add("dark");
@@ -110,11 +146,34 @@ function Navbar() {
             {/* Search Input */}
             <div className="hidden md:block">
               <label className="px-2 py-1 rounded-md flex items-center gap-2 border border-transparent focus-within:border-white transition-all duration-200">
-                <input
-                  type="text"
-                  className="w-64 h-10 grow text-base px-2 py-1  dark:bg-slate-900 dark:text-white outline-none border-none"
-                  placeholder="Search"
-                />
+              <nav className="relative">
+      {/* your other nav stuff */}
+
+      <div className="relative w-64" ref={dropdownRef}>
+        <input
+          type="text"
+          placeholder="Search books..."
+          className="border px-3 py-2 rounded w-full dark:text-black"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        {showDropdown && filteredBooks.length > 0 && (
+          <ul className="absolute z-50 w-full bg-white border mt-1 rounded shadow">
+            {filteredBooks.map((book) => (
+              <li key={book._id} className="px-4 py-2 hover:bg-gray-100 cursor-pointer dark:text-black">
+                <Link to={`/books/${book._id}`}>{book.name}</Link>
+              </li>
+            ))}
+          </ul>
+        )}
+        {showDropdown && filteredBooks.length === 0 && (
+          <div className="absolute z-50 w-full bg-white border mt-1 rounded shadow px-4 py-2 text-gray-500">
+            No books found
+          </div>
+        )}
+      </div>
+    </nav>
+
                 <button className="w-15 h-10 grow text-base px-2 py-1  dark:bg-slate-800 dark:text-white outline-none border-none">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
                      fill="currentColor" className="w-4 h-4 opacity-90">

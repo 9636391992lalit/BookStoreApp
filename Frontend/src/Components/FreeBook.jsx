@@ -15,7 +15,7 @@ function Freebook() {
              const res=await axios.get("http://localhost:4001/book");
              
 
-             const data=res.data.filter((data) => data.category === "Free");
+             const data=res.data.filter((data) => data.price === 0);
              console.log(data);
              setBook(data);
         }
@@ -78,7 +78,7 @@ function Freebook() {
         </div>
       
 
-      <div className="px-4  ">
+      <div className="px-4 hover:cursor-pointer ">
         <Slider {...settings}>
         {book.map((items)=>(<Cards item={items} key={items.id}/>))}
       </Slider>
